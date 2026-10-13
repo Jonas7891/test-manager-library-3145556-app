@@ -33,13 +33,13 @@ O con todo el sistema desde `test-manager-library-3145556-infra`: `docker compos
 
 Con `infra` levantado y el sembrador de `tool` ejecutado:
 
-1. Entrar como `admin` → aparecen los 7 menús.
+1. Entrar como el admin (`Jonas7891`) → aparecen los 7 menús.
 2. **Prestar** → buscar un socio sin vencidos, añadir 1 a 3 libros, *Registrar*: aparece la fecha de vencimiento (14 días).
    Intentar con un socio vencido muestra «El socio tiene libros vencidos…» (409).
 3. **Préstamos** → *Devolver* una línea; los disponibles del libro suben en **Catálogo**.
 4. **Vencidos** → las 3 líneas sembradas, con los días de retraso.
 5. **Más prestados** → rango del mes: filas ordenadas de mayor a menor.
-6. *Salir* y entrar como `bibliotecario.demo` → no aparecen ni «Más prestados» ni «Bibliotecarios».
+6. *Salir* y entrar como el bibliotecario (`Juan Diego`) → no aparecen ni «Más prestados» ni «Bibliotecarios».
 
 `npm run build` compila sin errores.
 
@@ -50,7 +50,7 @@ instalado, así que no descarga navegadores. Hace un préstamo y una devolución
 
 ```bash
 npm install
-ADMIN_PASSWORD=<la del .env de infra> npm run walkthrough   # BROWSER_CHANNEL=chrome si no hay Edge
+ADMIN_PASSWORD=<del .env> LIBRARIAN_PASSWORD=<del .env> npm run walkthrough   # BROWSER_CHANNEL=chrome si no hay Edge
 ```
 
 Corrida del 13-10-2026: los 8 pasos en verde, con una captura por paso en [`evidence/t-22/`](evidence/t-22/).
@@ -64,4 +64,4 @@ Corrida del 13-10-2026: los 8 pasos en verde, con una captura por paso en [`evid
 | 5 | Devolver una línea | `05-devolver.png` |
 | 6 | Vencidos | `06-vencidos.png` |
 | 7 | Más prestados del rango | `07-reporte.png` |
-| 8 | Entrar como `bibliotecario.demo`: sin «Más prestados» ni «Bibliotecarios» | `08-login-bibliotecario.png` |
+| 8 | Entrar como el bibliotecario (`Juan Diego`): sin «Más prestados» ni «Bibliotecarios» | `08-login-bibliotecario.png` |

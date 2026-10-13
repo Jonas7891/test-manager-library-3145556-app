@@ -1,22 +1,22 @@
 // T-22: recorrido de punta a punta grabado (ADR-011).
 // Requiere infra levantado y el sembrador de tool ejecutado. Uso:
 //   ADMIN_PASSWORD=... node e2e/walkthrough.mjs
-// Variables: APP_URL, API_URL, ADMIN_USERNAME, ADMIN_PASSWORD (obligatoria),
+// Variables: APP_URL, API_URL, ADMIN_USERNAME, ADMIN_PASSWORD y LIBRARIAN_PASSWORD (obligatorias),
 // LIBRARIAN_USERNAME, LIBRARIAN_PASSWORD, BROWSER_CHANNEL (msedge o chrome).
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright-core';
 
 const APP_URL = process.env.APP_URL ?? 'http://localhost:5173';
 const API_URL = process.env.API_URL ?? 'http://localhost:8000/api/v1';
-const ADMIN = { username: process.env.ADMIN_USERNAME ?? 'admin', password: process.env.ADMIN_PASSWORD };
+const ADMIN = { username: process.env.ADMIN_USERNAME ?? 'Jonas7891', password: process.env.ADMIN_PASSWORD };
 const LIBRARIAN = {
-  username: process.env.LIBRARIAN_USERNAME ?? 'bibliotecario.demo',
-  password: process.env.LIBRARIAN_PASSWORD ?? 'Demo-Biblio-2026',
+  username: process.env.LIBRARIAN_USERNAME ?? 'Juan Diego',
+  password: process.env.LIBRARIAN_PASSWORD,
 };
 const OUT = 'evidence/t-22';
 
-if (!ADMIN.password) {
-  console.error('Falta ADMIN_PASSWORD.');
+if (!ADMIN.password || !LIBRARIAN.password) {
+  console.error('Faltan ADMIN_PASSWORD o LIBRARIAN_PASSWORD (ADR-014).');
   process.exit(1);
 }
 
