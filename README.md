@@ -42,3 +42,26 @@ Con `infra` levantado y el sembrador de `tool` ejecutado:
 6. *Salir* y entrar como `bibliotecario.demo` → no aparecen ni «Más prestados» ni «Bibliotecarios».
 
 `npm run build` compila sin errores.
+
+### Recorrido grabado (ADR-011)
+
+El mismo recorrido se ejecuta en un navegador real con `e2e/walkthrough.mjs`. Usa `playwright-core` con el Edge o Chrome ya
+instalado, así que no descarga navegadores. Hace un préstamo y una devolución reales sobre la base de demostración.
+
+```bash
+npm install
+ADMIN_PASSWORD=<la del .env de infra> npm run walkthrough   # BROWSER_CHANNEL=chrome si no hay Edge
+```
+
+Corrida del 13-10-2026: los 8 pasos en verde, con una captura por paso en [`evidence/t-22/`](evidence/t-22/).
+
+| # | Paso | Captura |
+|---|---|---|
+| 1 | Entrar como admin: 7 menús | `01-login-admin.png` |
+| 2 | Catálogo | `02-catalogo.png` |
+| 3 | Socios | `03-socios.png` |
+| 4 | Prestar: «Préstamo registrado», vence a los 14 días | `04-prestar.png` |
+| 5 | Devolver una línea | `05-devolver.png` |
+| 6 | Vencidos | `06-vencidos.png` |
+| 7 | Más prestados del rango | `07-reporte.png` |
+| 8 | Entrar como `bibliotecario.demo`: sin «Más prestados» ni «Bibliotecarios» | `08-login-bibliotecario.png` |
