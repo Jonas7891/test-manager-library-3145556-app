@@ -1,50 +1,44 @@
 # test-manager-library-3145556-app
 
-> **Prueba técnica · Ficha ADSO 3145556**
-> Entrega: **martes 13 de octubre de 2026, a las 5:00 p. m.** (17:00, hora Colombia).
+> **Prueba técnica · Ficha ADSO 3145556**: frontend de *Manager Library* en **React 18 + Vite** (T-22).
+> Consume la API de `test-manager-library-3145556-api` según `api-contract.md`.
 
-Este repositorio es el **frontend** de *Manager Library*, en **React**. **Empieza vacío a propósito**: se construye en el fork de cada aprendiz.
+## Pantallas
 
-## Instrucciones
+| Pantalla | Ruta | Rol | Historia |
+|---|---|---|---|
+| Inicio de sesión | — | público | HU-01 |
+| Catálogo: búsqueda, alta, edición, baja y portada | `/books` | todos (mantenimiento solo admin) | HU-03, HU-04 |
+| Socios: alta, búsqueda y detalle con libros sin devolver | `/members` | admin, bibliotecario | HU-05 |
+| Registrar préstamo (socio + 1 a 3 libros) | `/loans/new` | admin, bibliotecario | HU-06 |
+| Préstamos: filtros y devolución por línea | `/loans` | admin, bibliotecario | HU-07, HU-08 |
+| Vencidos | `/overdue` | admin, bibliotecario | HU-09 |
+| Más prestados | `/report` | solo admin | HU-10 |
+| Alta de bibliotecarios | `/users` | solo admin | HU-02 |
 
-Cada aprendiz debe **crear el fork** de los seis repositorios del proyecto y **resolver el proyecto
-con el spec planteado**.
+El menú oculta al bibliotecario lo que su rol no permite; la API lo vuelve a comprobar en cada petición (403).
+Los errores se muestran con el `message` en español del cuerpo de error único, más sus `details`.
 
-1. Hacer fork, a su cuenta de GitHub, de cada repositorio de la tabla del final.
-2. Leer el spec en [`test-manager-library-3145556-docs`](https://github.com/code-sena/test-manager-library-3145556-docs).
-   Se entrega en dos versiones: `spec-python/` y `spec-.net/`.
-3. Desarrollar en los forks.
+## Cómo se corre
 
-## El reto se desarrolla con React y PHP (Laravel)
+```bash
+cp .env.example .env     # VITE_API_URL=http://localhost:8000/api/v1
+npm install
+npm run dev              # http://localhost:5173
+```
 
-El spec está escrito para Python y para .NET, pero el reto **no** se hace en esos lenguajes:
+O con todo el sistema desde `test-manager-library-3145556-infra`: `docker compose up -d --build`.
 
-| Capa | Tecnología del reto |
-|---|---|
-| Frontend | React |
-| Backend | PHP con Laravel |
+## Recorrido de punta a punta (evidencia de T-22)
 
-Lo que el spec define sobre el negocio —historias, criterios de aceptación, reglas, contrato de la
-API, modelo de datos— se respeta. Lo que define sobre la tecnología se traduce a React y Laravel.
+Con `infra` levantado y el sembrador de `tool` ejecutado:
 
-## La prueba no consiste en escribir el código
+1. Entrar como `admin` → aparecen los 7 menús.
+2. **Prestar** → buscar un socio sin vencidos, añadir 1 a 3 libros, *Registrar*: aparece la fecha de vencimiento (14 días).
+   Intentar con un socio vencido muestra «El socio tiene libros vencidos…» (409).
+3. **Préstamos** → *Devolver* una línea; los disponibles del libro suben en **Catálogo**.
+4. **Vencidos** → las 3 líneas sembradas, con los días de retraso.
+5. **Más prestados** → rango del mes: filas ordenadas de mayor a menor.
+6. *Salir* y entrar como `bibliotecario.demo` → no aparecen ni «Más prestados» ni «Bibliotecarios».
 
-El propósito principal es ver la **capacidad de desempeño con SDD** (*Spec-Driven Development*,
-desarrollo guiado por especificación): cómo se lee, se interpreta y se aplica una especificación
-para llevarla a un stack distinto. El código es el medio, no el fin.
-
-## Entrega
-
-Cuenta lo que quede **subido a los forks antes de las 5:00 p. m.** (17:00). Lo que llegue después no se revisa.
-No hay prórroga: suban avances parciales con commits pequeños durante la prueba.
-
-## Los seis repositorios
-
-| Repositorio | Qué va ahí |
-|---|---|
-| [`test-manager-library-3145556-docs`](https://github.com/code-sena/test-manager-library-3145556-docs) | El spec: `spec-python/` y `spec-.net/` |
-| [`test-manager-library-3145556-api`](https://github.com/code-sena/test-manager-library-3145556-api) | Backend en PHP (Laravel) |
-| [`test-manager-library-3145556-app`](https://github.com/code-sena/test-manager-library-3145556-app) | Frontend en React |
-| [`test-manager-library-3145556-page`](https://github.com/code-sena/test-manager-library-3145556-page) | Sitio público estático de presentación |
-| [`test-manager-library-3145556-infra`](https://github.com/code-sena/test-manager-library-3145556-infra) | Contenedores, red, volúmenes y motor de base de datos vacío |
-| [`test-manager-library-3145556-tool`](https://github.com/code-sena/test-manager-library-3145556-tool) | Utilidades: sembrador de datos de demostración |
+`npm run build` compila sin errores.
