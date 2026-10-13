@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useDeferredValue, useState } from 'react';
 import { api } from '../api/client.js';
 import { ErrorBanner, Notice, Pagination, useQuery } from '../components/Common.jsx';
 
@@ -9,7 +9,8 @@ export default function MembersPage() {
   const [detail, setDetail] = useState(null);
   const [error, setError] = useState(null);
   const [notice, setNotice] = useState('');
-  const members = useQuery(() => api('/members', { query: { ...filters, size: 10 } }), [filters]);
+  const query = useDeferredValue(filters);
+  const members = useQuery(() => api('/members', { query: { ...query, size: 10 } }), [query]);
 
   async function create(e) {
     e.preventDefault();

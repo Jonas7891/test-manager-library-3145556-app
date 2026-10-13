@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useDeferredValue, useState } from 'react';
 import { api } from '../api/client.js';
 import { ErrorBanner, formatDate, useQuery } from '../components/Common.jsx';
 
@@ -11,8 +11,10 @@ export default function NewLoanPage() {
   const [error, setError] = useState(null);
   const [created, setCreated] = useState(null);
 
-  const members = useQuery(() => (memberQ ? api('/members', { query: { q: memberQ, size: 5 } }) : null), [memberQ]);
-  const books = useQuery(() => (bookQ ? api('/books', { query: { q: bookQ, size: 5 } }) : null), [bookQ]);
+  const memberSearch = useDeferredValue(memberQ);
+  const bookSearch = useDeferredValue(bookQ);
+  const members = useQuery(() => (memberSearch ? api('/members', { query: { q: memberSearch, size: 5 } }) : null), [memberSearch]);
+  const books = useQuery(() => (bookSearch ? api('/books', { query: { q: bookSearch, size: 5 } }) : null), [bookSearch]);
 
   function add(book) {
     if (selected.length < 3 && !selected.some((b) => b.id === book.id)) setSelected([...selected, book]);

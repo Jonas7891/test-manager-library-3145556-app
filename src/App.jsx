@@ -1,13 +1,14 @@
+import { Suspense, lazy } from 'react';
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './auth/AuthContext.jsx';
 import LoginPage from './pages/LoginPage.jsx';
-import BooksPage from './pages/BooksPage.jsx';
-import MembersPage from './pages/MembersPage.jsx';
-import NewLoanPage from './pages/NewLoanPage.jsx';
-import LoansPage from './pages/LoansPage.jsx';
-import OverduePage from './pages/OverduePage.jsx';
-import ReportPage from './pages/ReportPage.jsx';
-import UsersPage from './pages/UsersPage.jsx';
+const BooksPage = lazy(() => import('./pages/BooksPage.jsx'));
+const MembersPage = lazy(() => import('./pages/MembersPage.jsx'));
+const NewLoanPage = lazy(() => import('./pages/NewLoanPage.jsx'));
+const LoansPage = lazy(() => import('./pages/LoansPage.jsx'));
+const OverduePage = lazy(() => import('./pages/OverduePage.jsx'));
+const ReportPage = lazy(() => import('./pages/ReportPage.jsx'));
+const UsersPage = lazy(() => import('./pages/UsersPage.jsx'));
 
 // Menú por rol (spec §1): el admin ve todo; el bibliotecario no ve reporte ni usuarios.
 const LINKS = [
@@ -19,6 +20,8 @@ const LINKS = [
   { to: '/report', label: 'Más prestados', admin: true },
   { to: '/users', label: 'Bibliotecarios', admin: true },
 ];
+const LINKS_BY_ROLE = { admin: LINKS, librarian: LINKS.filter((l) => !l.admin) };
+const LOADING = <p className="muted">Cargando…</p>;
 
 function AdminOnly({ children }) {
   const { isAdmin } = useAuth();
@@ -34,7 +37,7 @@ export default function App() {
       <header>
         <strong className="brand">Manager Library</strong>
         <nav>
-          {LINKS.filter((l) => !l.admin || isAdmin).map((l) => (
+          {LINKS_BY_ROLE[isAdmin ? 'admin' : 'librarian'].map((l) => (
             <NavLink key={l.to} to={l.to} end={l.end}>
               {l.label}
             </NavLink>
@@ -48,6 +51,7 @@ export default function App() {
         </span>
       </header>
       <main>
+        <Suspense fallback={LOADING}>
         <Routes>
           <Route path="/books" element={<BooksPage />} />
           <Route path="/members" element={<MembersPage />} />
@@ -58,6 +62,7 @@ export default function App() {
           <Route path="/users" element={<AdminOnly><UsersPage /></AdminOnly>} />
           <Route path="*" element={<Navigate to="/books" replace />} />
         </Routes>
+        </Suspense>
       </main>
     </div>
   );

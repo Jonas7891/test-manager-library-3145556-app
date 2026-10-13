@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useDeferredValue, useEffect, useState } from 'react';
 import { api, fetchCover } from '../api/client.js';
 import { useAuth } from '../auth/AuthContext.jsx';
 import { ErrorBanner, Notice, Pagination, useQuery } from '../components/Common.jsx';
@@ -26,7 +26,8 @@ export default function BooksPage() {
   const [notice, setNotice] = useState('');
 
   const categories = useQuery(() => api('/categories'), []);
-  const books = useQuery(() => api('/books', { query: { ...filters, size: 10 } }), [filters]);
+  const query = useDeferredValue(filters);
+  const books = useQuery(() => api('/books', { query: { ...query, size: 10 } }), [query]);
 
   async function run(action, message) {
     setError(null);
