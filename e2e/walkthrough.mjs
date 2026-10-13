@@ -1,8 +1,8 @@
-// T-22: recorrido de punta a punta grabado (ADR-011).
-// Requiere infra levantado y el sembrador de tool ejecutado. Uso:
+// T-22: recorded end-to-end walkthrough (ADR-011).
+// Needs infra running and the tool seeder already run. Usage:
 //   ADMIN_PASSWORD=... node e2e/walkthrough.mjs
-// Variables: APP_URL, API_URL, ADMIN_USERNAME, ADMIN_PASSWORD y LIBRARIAN_PASSWORD (obligatorias),
-// LIBRARIAN_USERNAME, LIBRARIAN_PASSWORD, BROWSER_CHANNEL (msedge o chrome).
+// Variables: APP_URL, API_URL, ADMIN_USERNAME, ADMIN_PASSWORD and LIBRARIAN_PASSWORD (required),
+// LIBRARIAN_USERNAME, BROWSER_CHANNEL (msedge or chrome).
 import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright-core';
 
@@ -20,7 +20,7 @@ if (!ADMIN.password || !LIBRARIAN.password) {
   process.exit(1);
 }
 
-// Solo lectura por la API para elegir un socio y un libro válidos para el préstamo.
+// Read-only API calls to pick a member and a book that are valid for the loan.
 async function apiGet(token, path) {
   const res = await fetch(`${API_URL}${path}`, { headers: { Authorization: `Bearer ${token}` } });
   if (!res.ok) throw new Error(`GET ${path} → ${res.status}`);
@@ -39,7 +39,7 @@ async function pickLoanData() {
   const members = await apiGet(token, '/members?size=50');
   let member = null;
   for (const m of members.items.filter((x) => !blocked.has(x.full_name))) {
-    const detail = await apiGet(token, `/members/${m.id}`); // el listado no trae active_loans
+    const detail = await apiGet(token, `/members/${m.id}`); // the list does not include active_loans
     if (detail.active_loans < 3) { member = detail; break; }
   }
   const books = await apiGet(token, '/books?size=50');

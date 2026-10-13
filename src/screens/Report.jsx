@@ -5,7 +5,7 @@ import { Alert, DataTable, Field, PageHeader, Panel } from '../ui/index.jsx';
 const today = new Date().toISOString().slice(0, 10);
 const monthStart = today.slice(0, 8) + '01';
 
-// HU-10 (solo admin): una fila por libro y categoría congelados; sin socios ni bibliotecarios.
+// HU-10 (admin only): one row per frozen book and category; no members or librarians.
 export default function Report() {
   const [range, setRange] = useState({ from: monthStart, to: today });
   const [report, setReport] = useState(null);

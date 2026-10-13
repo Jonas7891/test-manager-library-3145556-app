@@ -1,4 +1,4 @@
-// Bloques reutilizables de la interfaz (ADR-013).
+// Reusable interface blocks (ADR-013).
 
 export function PageHeader({ title, description, children }) {
   return (
@@ -48,7 +48,7 @@ export function Alert({ error, success }) {
   return success ? <div className="alert ok">{success}</div> : null;
 }
 
-// Tabla con encabezados y estado vacío.
+// Table with headers and an empty state.
 export function DataTable({ columns, rows, rowKey, empty = 'Sin resultados.', renderRow }) {
   return (
     <div className="table-scroll">

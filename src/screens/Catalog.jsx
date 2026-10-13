@@ -59,7 +59,7 @@ export default function Catalog() {
   function uploadCover(book, file) {
     const data = new FormData();
     data.append('file', file);
-    data.append('_method', 'PUT'); // PHP solo lee multipart en POST (ADR-009)
+    data.append('_method', 'PUT'); // PHP only parses multipart on POST (ADR-009)
     run(() => api(`/books/${book.id}/cover`, { method: 'POST', body: data }), 'Portada guardada.');
   }
 

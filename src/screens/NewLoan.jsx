@@ -4,7 +4,7 @@ import { formatDate } from '../lib/format.js';
 import { useQuery } from '../lib/useQuery.js';
 import { Alert, Field, PageHeader, Panel } from '../ui/index.jsx';
 
-// HU-06: un socio, de 1 a 3 libros distintos.
+// HU-06: one member, 1 to 3 different books.
 export default function NewLoan() {
   const [memberQ, setMemberQ] = useState('');
   const [bookQ, setBookQ] = useState('');

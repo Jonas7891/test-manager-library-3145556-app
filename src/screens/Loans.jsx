@@ -6,7 +6,7 @@ import { Alert, DataTable, Field, PageHeader, Pager, Panel } from '../ui/index.j
 
 const COLUMNS = ['Libro', 'ISBN', 'Categoría', 'Vence', 'Devuelto', ''];
 
-// HU-07 y HU-08: listar con filtros y devolver por línea.
+// HU-07 and HU-08: list with filters and return per line.
 export default function Loans() {
   const [filters, setFilters] = useState({ from: '', to: '', status: '', page: 1 });
   const [error, setError] = useState(null);

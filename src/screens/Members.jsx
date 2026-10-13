@@ -5,7 +5,7 @@ import { Alert, DataTable, Field, PageHeader, Pager, Panel } from '../ui/index.j
 
 const EMPTY = { full_name: '', document_number: '' };
 
-// HU-05: los socios se crean y se consultan; no se eliminan.
+// HU-05: members are created and looked up; they are never deleted.
 export default function Members() {
   const [filters, setFilters] = useState({ q: '', page: 1 });
   const [form, setForm] = useState(EMPTY);

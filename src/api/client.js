@@ -1,4 +1,4 @@
-// Cliente HTTP de la API (api-contract.md). Traduce el cuerpo de error único a ApiError.
+// HTTP client for the API (api-contract.md). Turns the single error body into ApiError.
 const BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api/v1';
 
 export class ApiError extends Error {
@@ -57,7 +57,7 @@ export function coverUrl(bookId) {
   return `${BASE}/books/${bookId}/cover`;
 }
 
-// Las portadas exigen token: se descargan como blob para pintarlas.
+// Covers require a token, so they are downloaded as a blob before being shown.
 export async function fetchCover(bookId) {
   const res = await fetch(coverUrl(bookId), { headers: { Authorization: `Bearer ${token}` } });
   if (!res.ok) return null;

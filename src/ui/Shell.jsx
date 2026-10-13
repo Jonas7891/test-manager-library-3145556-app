@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 
-// Menú por rol (spec §1): el admin ve todo; el bibliotecario no ve reporte ni usuarios.
+// Menu per role (spec §1): the admin sees everything; the librarian sees neither the report nor users.
 const LINKS = [
   { to: '/books', label: 'Catálogo', icon: '📚' },
   { to: '/members', label: 'Socios', icon: '🪪' },

@@ -4,7 +4,7 @@ import { Alert, Field, PageHeader, Panel } from '../ui/index.jsx';
 
 const EMPTY = { username: '', password: '' };
 
-// HU-02 (solo admin): por la API solo se crean bibliotecarios.
+// HU-02 (admin only): the API only creates librarians.
 export default function Librarians() {
   const [form, setForm] = useState(EMPTY);
   const [error, setError] = useState(null);

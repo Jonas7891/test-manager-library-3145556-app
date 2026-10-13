@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-// Carga una consulta de la API; descarta respuestas que llegan después de una más nueva.
+// Loads an API query and drops responses that arrive after a newer one.
 export function useQuery(fn, deps) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);

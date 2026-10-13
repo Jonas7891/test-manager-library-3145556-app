@@ -4,7 +4,7 @@ import { formatDate } from '../lib/format.js';
 import { useQuery } from '../lib/useQuery.js';
 import { Alert, DataTable, PageHeader, Pager, Panel } from '../ui/index.jsx';
 
-// HU-09: más días de retraso primero.
+// HU-09: most days late first.
 export default function Overdue() {
   const [page, setPage] = useState(1);
   const overdue = useQuery(() => api('/loans/overdue', { query: { page, size: 20 } }), [page]);
