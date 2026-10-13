@@ -1,25 +1,33 @@
 # test-manager-library-3145556-app
 
-> **Prueba técnica · Ficha ADSO 3145556**: frontend de *Manager Library* en **React 18 + Vite** (T-22).
-> Consume la API de `test-manager-library-3145556-api` según `api-contract.md`.
+> **Technical test · ADSO group 3145556**: *Manager Library* frontend in **React 18 + Vite** (T-22).
+> It consumes the `test-manager-library-3145556-api` API as defined in `api-contract.md`.
 
-## Pantallas
+## Screens
 
-| Pantalla | Ruta | Rol | Historia |
+Screen texts are in Spanish because users see them (ADR-015).
+
+| Screen | Route | Role | Story |
 |---|---|---|---|
-| Inicio de sesión | — | público | HU-01 |
-| Catálogo: búsqueda, alta, edición, baja y portada | `/books` | todos (mantenimiento solo admin) | HU-03, HU-04 |
-| Socios: alta, búsqueda y detalle con libros sin devolver | `/members` | admin, bibliotecario | HU-05 |
-| Registrar préstamo (socio + 1 a 3 libros) | `/loans/new` | admin, bibliotecario | HU-06 |
-| Préstamos: filtros y devolución por línea | `/loans` | admin, bibliotecario | HU-07, HU-08 |
-| Vencidos | `/overdue` | admin, bibliotecario | HU-09 |
-| Más prestados | `/report` | solo admin | HU-10 |
-| Alta de bibliotecarios | `/users` | solo admin | HU-02 |
+| Login | — | public | HU-01 |
+| Catalogue: search, create, edit, soft delete and cover | `/books` | everyone (maintenance admin only) | HU-03, HU-04 |
+| Members: create, search and detail with unreturned books | `/members` | admin, librarian | HU-05 |
+| Register a loan (member + 1 to 3 books) | `/loans/new` | admin, librarian | HU-06 |
+| Loans: filters and return per line | `/loans` | admin, librarian | HU-07, HU-08 |
+| Overdue | `/overdue` | admin, librarian | HU-09 |
+| Most borrowed | `/report` | admin only | HU-10 |
+| Create librarians | `/users` | admin only | HU-02 |
 
-El menú oculta al bibliotecario lo que su rol no permite; la API lo vuelve a comprobar en cada petición (403).
-Los errores se muestran con el `message` en español del cuerpo de error único, más sus `details`.
+The menu hides from the librarian what the role does not allow, and the API checks it again on every request (403).
+Errors are shown with the Spanish `message` from the single error body, plus its `details`.
 
-## Cómo se corre
+Code layout after the redesign (ADR-013):
+- `screens/`: one file per screen;
+- `ui/`: reusable blocks;
+- `lib/`: `useQuery` and formatters;
+- `api/` and `auth/`: unchanged HTTP client and session.
+
+## How to run it
 
 ```bash
 cp .env.example .env     # VITE_API_URL=http://localhost:8000/api/v1
@@ -27,41 +35,41 @@ npm install
 npm run dev              # http://localhost:5173
 ```
 
-O con todo el sistema desde `test-manager-library-3145556-infra`: `docker compose up -d --build`.
+Or start the whole system from `test-manager-library-3145556-infra` with `docker compose up -d --build`.
 
-## Recorrido de punta a punta (evidencia de T-22)
+## End-to-end walkthrough (T-22 evidence)
 
-Con `infra` levantado y el sembrador de `tool` ejecutado:
+With `infra` running and the `tool` seeder already run:
 
-1. Entrar como el admin (`Jonas7891`) → aparecen los 7 menús.
-2. **Prestar** → buscar un socio sin vencidos, añadir 1 a 3 libros, *Registrar*: aparece la fecha de vencimiento (14 días).
-   Intentar con un socio vencido muestra «El socio tiene libros vencidos…» (409).
-3. **Préstamos** → *Devolver* una línea; los disponibles del libro suben en **Catálogo**.
-4. **Vencidos** → las 3 líneas sembradas, con los días de retraso.
-5. **Más prestados** → rango del mes: filas ordenadas de mayor a menor.
-6. *Salir* y entrar como el bibliotecario (`Juan Diego`) → no aparecen ni «Más prestados» ni «Bibliotecarios».
+1. Log in as the admin (`Jonas7891`): the 7 menus appear.
+2. **Prestar**: search for a member with no overdue loans, add 1 to 3 books and click *Registrar*. The due date (14 days)
+   appears. Trying with an overdue member shows «El socio tiene libros vencidos…» (409).
+3. **Préstamos**: return one line with *Devolver*. The book's available copies go up in **Catálogo**.
+4. **Vencidos**: the 3 seeded lines, with the days late.
+5. **Más prestados**: for this month's range, rows sorted from most to least borrowed.
+6. Click *Salir* and log in as the librarian (`Juan Diego`): neither «Más prestados» nor «Bibliotecarios» appears.
 
-`npm run build` compila sin errores.
+`npm run build` compiles with no errors.
 
-### Recorrido grabado (ADR-011)
+### Recorded walkthrough (ADR-011)
 
-El mismo recorrido se ejecuta en un navegador real con `e2e/walkthrough.mjs`. Usa `playwright-core` con el Edge o Chrome ya
-instalado, así que no descarga navegadores. Hace un préstamo y una devolución reales sobre la base de demostración.
+The same walkthrough runs in a real browser with `e2e/walkthrough.mjs`. It uses `playwright-core` with the Edge or Chrome
+already installed, so no browser is downloaded. It makes one real loan and one real return on the demo database.
 
 ```bash
 npm install
-ADMIN_PASSWORD=<del .env> LIBRARIAN_PASSWORD=<del .env> npm run walkthrough   # BROWSER_CHANNEL=chrome si no hay Edge
+ADMIN_PASSWORD=<from .env> LIBRARIAN_PASSWORD=<from .env> npm run walkthrough   # BROWSER_CHANNEL=chrome if Edge is missing
 ```
 
-Corrida del 13-10-2026: los 8 pasos en verde, con una captura por paso en [`evidence/t-22/`](evidence/t-22/).
+Run of 13-10-2026: all 8 steps green, with one screenshot per step in [`evidence/t-22/`](evidence/t-22/).
 
-| # | Paso | Captura |
+| # | Step | Screenshot |
 |---|---|---|
-| 1 | Entrar como admin: 7 menús | `01-login-admin.png` |
-| 2 | Catálogo | `02-catalogo.png` |
-| 3 | Socios | `03-socios.png` |
-| 4 | Prestar: «Préstamo registrado», vence a los 14 días | `04-prestar.png` |
-| 5 | Devolver una línea | `05-devolver.png` |
-| 6 | Vencidos | `06-vencidos.png` |
-| 7 | Más prestados del rango | `07-reporte.png` |
-| 8 | Entrar como el bibliotecario (`Juan Diego`): sin «Más prestados» ni «Bibliotecarios» | `08-login-bibliotecario.png` |
+| 1 | Log in as admin: 7 menus | `01-login-admin.png` |
+| 2 | Catalogue | `02-catalogo.png` |
+| 3 | Members | `03-socios.png` |
+| 4 | Lend: «Préstamo registrado», due in 14 days | `04-prestar.png` |
+| 5 | Return one line | `05-devolver.png` |
+| 6 | Overdue | `06-vencidos.png` |
+| 7 | Most borrowed in the range | `07-reporte.png` |
+| 8 | Log in as the librarian (`Juan Diego`): no «Más prestados» and no «Bibliotecarios» | `08-login-bibliotecario.png` |
